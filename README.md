@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# `use` Hook on the Client Side with Suspense
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A demo project showcasing how to leverage React 19's [`use`](https://react.dev/reference/react/use) hook on the client
+side in combination with the [`<Suspense>`](https://react.dev/reference/react/Suspense) component for seamless async
+data loading.
 
-Currently, two official plugins are available:
+**Live demo:** https://rdeak.github.io/react-use-only-client/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Overview
 
-## React Compiler
+This project demonstrates a practical pattern where:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. A `Promise` is created on demand (e.g. on a button click) and stored in component state.
+2. The `Promise` is passed as a prop into a child component.
+3. The child component consumes it with the `use` hook, which suspends rendering until the data resolves.
+4. The parent wraps the child in `<Suspense>`, showing a fallback UI while the promise is pending.
 
-## Expanding the ESLint configuration
+The demo explores the Croatian national football team squad from the 2018 World Cup. Clicking a player's shirt reveals
+their details after a simulated async fetch.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Key Concepts
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Concept                     | Role in this demo                                              |
+|-----------------------------|----------------------------------------------------------------|
+| `use(promise)`              | Reads a promise inside a component; suspends until it resolves |
+| `<Suspense fallback={...}>` | Catches the suspension and renders a fallback (e.g. a loader)  |
+| `useState<Promise>`         | Holds the in-flight promise so it can be passed down as a prop |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **React 19** — `use` hook, `<Suspense>`
+- **TypeScript**
+- **Vite**
+- **Tailwind CSS**
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## License
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+MIT
